@@ -1,13 +1,17 @@
 import { Model, ObjectId } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {  User, UserDocument } from './schema/user.schema';
+import { User, UserDocument } from './schema/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PostsService } from 'src/posts/posts.service';
+import { PaginationDto } from '../pagination/pagination.dto';
+import { PaginatedPostResultDto } from 'src/pagination/paginatedPostResult.dto';
+
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,private postService: PostsService) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     return await new this.userModel(createUserDto).save();
@@ -17,19 +21,49 @@ export class UsersService {
     return await this.userModel.find();
   }
 
-  async getProfile(id: ObjectId):Promise<User>{
-    return await this.userModel.findById(id) 
+  async getProfile(id: ObjectId): Promise<User> {
+    return await this.userModel.findById(id, { password: 0 })
   }
 
   async update(id: ObjectId, updateUserDto: UpdateUserDto): Promise<User> {
     return await this.userModel.findByIdAndUpdate(id, updateUserDto);
   }
 
-  async delete(id:  ObjectId): Promise<User> {
+  async delete(id: ObjectId): Promise<User> {
     return await this.userModel.findByIdAndDelete(id);
   }
 
   async findOne(username: string): Promise<User | undefined> {
-    return this.userModel.findOne({username: username});
+    return this.userModel.findOne({ username: username });
   }
+
+  async follow(id: ObjectId, userToFollow: ObjectId): Promise<User> {
+    return await this.userModel.findByIdAndUpdate(id,
+      {
+        $push: { "following": userToFollow }
+      }
+    )
+  }
+
+  async unfollow(id: ObjectId, userToFollow: ObjectId): Promise<User> {
+    return await this.userModel.findByIdAndUpdate(id,
+      {
+        $pull: { "following": userToFollow }
+      }
+    )
+  }
+
+  async getFeed(id: ObjectId, paginationDto: PaginationDto): Promise<PaginatedPostResultDto> {
+    const user = await this.userModel.findById(id)
+    const feed = await this.postService.feed(user.following)
+    const totalCount = feed.length - 1
+    return {
+      totalCount,
+      page: paginationDto.page,
+      limit: paginationDto.limit,
+      data: feed.splice(paginationDto.page, paginationDto.limit)
+
+    }
+  }
+
 }

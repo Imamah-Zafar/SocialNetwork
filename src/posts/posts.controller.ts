@@ -2,12 +2,15 @@ import { Body, Controller, Get, Post, HttpStatus, Res, Param, Put,Request, Delet
 import { Response } from 'express';
 import { ObjectId } from 'mongoose';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { PaginationDto } from './dto/pagination.dto';
+import { PaginationDto } from '../pagination/pagination.dto';
 import { CreatePostDto} from './dto/create-post.dto';
 import { PostsService } from './posts.service';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 
+
+@ApiTags('Post')
 @Controller('posts')
 @UseGuards(JwtAuthGuard)
 export class PostController {

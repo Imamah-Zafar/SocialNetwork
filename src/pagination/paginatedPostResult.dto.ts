@@ -1,4 +1,4 @@
-import { Post } from "../schema/post.schema"
+import { Post } from "../posts/schema/post.schema"
 
 export class PaginatedPostResultDto {
     data: Post[]

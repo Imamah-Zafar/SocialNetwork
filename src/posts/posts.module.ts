@@ -10,6 +10,7 @@ import { PostController } from './posts.controller';
         MongooseModule.forFeature([{ name: Post.name, schema: PostSchema}]),
     ],
     providers:[PostsService],
-    controllers:[PostController]
+    controllers:[PostController],
+    exports:[PostsService]
 })
 export class PostsModule {}

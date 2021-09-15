@@ -10,7 +10,8 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   providers: [AuthService, LocalStrategy,JwtStrategy],
   imports: [
-    forwardRef(() =>UserModule),
+    UserModule,
+   // forwardRef(() =>UserModule),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
