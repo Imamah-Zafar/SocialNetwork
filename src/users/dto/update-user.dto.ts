@@ -5,14 +5,14 @@ export class UpdateUserDto{
  
     @IsNotEmpty()
     @IsEmail()
-    @ApiProperty()
+
     email:string;
 
     @IsString()
-    @ApiProperty()
+
     firstName:string;
 
     @IsString()
-    @ApiProperty()
+
     lastName:string;
 }

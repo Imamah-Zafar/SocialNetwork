@@ -27,19 +27,12 @@ export class PostsService {
     }
   }
 
-  async find(id: ObjectId) {
+  async feed(following: ObjectId[], searchFilter: string) {
 
-    const foundPost = await this.postModel.find({ user: id }).populate("posts")
-
+    const regex = new RegExp(searchFilter, 'i')
+    const foundPost = await this.postModel.find({ user: { $in: following }, title: { $regex: regex } }).populate("user", "username")
     return foundPost
-    
-  }
 
-  async feed(following: ObjectId[]) {
-
-    const foundPost = await this.postModel.find({ user: {$in:following }}).populate("posts")
-    return foundPost
-    
   }
 
   async getPost(id: ObjectId): Promise<Post> {

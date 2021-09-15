@@ -53,15 +53,15 @@ export class UsersService {
     )
   }
 
-  async getFeed(id: ObjectId, paginationDto: PaginationDto): Promise<PaginatedPostResultDto> {
-    const user = await this.userModel.findById(id)
-    const feed = await this.postService.feed(user.following)
-    const totalCount = feed.length - 1
+  async getFeed(following: ObjectId[], paginationDto: PaginationDto): Promise<PaginatedPostResultDto> {
+    const feed = await this.postService.feed(following,paginationDto.query)
+    const totalCount = feed.length 
+    
     return {
       totalCount,
       page: paginationDto.page,
       limit: paginationDto.limit,
-      data: feed.splice(paginationDto.page, paginationDto.limit)
+      data: feed.splice(paginationDto.page-1, paginationDto.limit)
 
     }
   }

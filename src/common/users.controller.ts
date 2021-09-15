@@ -9,10 +9,10 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/user.service'
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from '../users/dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 const saltOrRounds = 10;
 
-
+@ApiBearerAuth()
 @ApiTags('User')
 @Controller('users')
 export class UsersController {
@@ -130,10 +130,9 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @Get('/feed')
     async getFeed(@Query() paginationDto: PaginationDto, @Res() res: Response, @Request() req) {
-
-        paginationDto.page = Number(paginationDto.page)
-        paginationDto.limit = Number(paginationDto.limit)
-        const feed = await this.usersService.getFeed(req.user.userId, paginationDto)
+        paginationDto.page = Number(paginationDto.page)||1
+        paginationDto.limit = Number(paginationDto.limit)|| 2
+        const feed = await this.usersService.getFeed(req.user.following, paginationDto)
         if (feed) {
             res.status(HttpStatus.OK).json({ message: "Successfully Retrieved Feed", data: feed });
         }

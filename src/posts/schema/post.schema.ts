@@ -15,7 +15,7 @@ export class Post{
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users"})
+    ref: "User"})
     user:mongoose.Schema.Types.ObjectId
     
   
