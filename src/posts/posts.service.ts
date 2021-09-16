@@ -30,8 +30,10 @@ export class PostsService {
   async feed(following: ObjectId[], searchFilter: string) {
 
     const regex = new RegExp(searchFilter, 'i')
-    const foundPost = await this.postModel.find({ user: { $in: following }, title: { $regex: regex } }).populate("user", "username")
+    const foundPost = await this.postModel.find({ $or: [{ user: { $in: following }, title: { $regex: regex } }, { user: { $in: following }, body: { $regex: regex } }] }).populate("user", "username")
+
     return foundPost
+
 
   }
 

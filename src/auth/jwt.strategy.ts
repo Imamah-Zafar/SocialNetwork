@@ -19,6 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     const user = await this.usersService.findOne(payload.username);
     if (user) {
+
       return { userId: payload.sub, username: payload.username ,following:user.following};
     }
     else {

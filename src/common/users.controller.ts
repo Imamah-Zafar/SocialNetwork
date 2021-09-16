@@ -10,6 +10,7 @@ import { UsersService } from '../users/user.service'
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from '../users/dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { io } from 'socket.io-client';
 const saltOrRounds = 10;
 
 @ApiBearerAuth()
@@ -29,7 +30,7 @@ export class UsersController {
             res.status(HttpStatus.OK).json({ message: "Successfully Retrieved Users", body: users });
         }
         else {
-            res.status(HttpStatus.NOT_FOUND)
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not retrieve users" });
         }
 
     }
@@ -72,7 +73,7 @@ export class UsersController {
             res.status(HttpStatus.OK).json({ message: "Successfully Retrieved Profile", body: user });
         }
         else {
-            res.status(HttpStatus.NOT_FOUND)
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not get profile" });
         }
     }
 
@@ -85,7 +86,7 @@ export class UsersController {
             res.status(HttpStatus.OK).json({ message: "Successfully Updated", data: updatedUser });
         }
         else {
-            res.status(HttpStatus.NOT_FOUND)
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not update user" });
         }
     }
 
@@ -97,7 +98,7 @@ export class UsersController {
             res.status(HttpStatus.OK).json({ message: "Successfully Deleted" });
         }
         else {
-            res.status(HttpStatus.NOT_FOUND)
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not delete user" });
         }
     }
 
@@ -107,10 +108,13 @@ export class UsersController {
 
         const user = await this.usersService.follow(req.user.userId, id);
         if (user) {
+
+        const  socket = io('http://localhost:3000')
+        socket.emit('joinRoom', id)
             res.status(HttpStatus.OK).json({ message: "Successfully Followed User", data: user });
         }
         else {
-            res.status(HttpStatus.NOT_FOUND)
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not follow user" });
         }
     }
 
@@ -123,7 +127,7 @@ export class UsersController {
             res.status(HttpStatus.OK).json({ message: "Successfully Unfollowed User" });
         }
         else {
-            res.status(HttpStatus.NOT_FOUND)
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not unfollow user" });
         }
     }
 
@@ -133,11 +137,12 @@ export class UsersController {
         paginationDto.page = Number(paginationDto.page)||1
         paginationDto.limit = Number(paginationDto.limit)|| 2
         const feed = await this.usersService.getFeed(req.user.following, paginationDto)
-        if (feed) {
+        if (feed ) {
             res.status(HttpStatus.OK).json({ message: "Successfully Retrieved Feed", data: feed });
         }
         else {
-            res.status(HttpStatus.NOT_FOUND)
+            
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not retireve feed"});
         }
     }
 

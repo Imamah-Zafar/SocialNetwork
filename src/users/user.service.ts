@@ -11,7 +11,7 @@ import { PaginatedPostResultDto } from 'src/pagination/paginatedPostResult.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,private postService: PostsService) { }
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, private postService: PostsService) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     return await new this.userModel(createUserDto).save();
@@ -34,7 +34,7 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<User | undefined> {
-    return this.userModel.findOne({ username: username });
+    return this.userModel.findOne({ username: username }).select('+password');
   }
 
   async follow(id: ObjectId, userToFollow: ObjectId): Promise<User> {
@@ -54,15 +54,19 @@ export class UsersService {
   }
 
   async getFeed(following: ObjectId[], paginationDto: PaginationDto): Promise<PaginatedPostResultDto> {
-    const feed = await this.postService.feed(following,paginationDto.query)
-    const totalCount = feed.length 
-    
-    return {
-      totalCount,
-      page: paginationDto.page,
-      limit: paginationDto.limit,
-      data: feed.splice(paginationDto.page-1, paginationDto.limit)
+    const feed = await this.postService.feed(following, paginationDto.query)
+    const totalCount = feed.length
+    if (totalCount === 0) {
+      return null
+    }
+    else {
+      return {
+        totalCount,
+        page: paginationDto.page,
+        limit: paginationDto.limit,
+        data: feed.splice(paginationDto.page - 1, paginationDto.limit)
 
+      }
     }
   }
 

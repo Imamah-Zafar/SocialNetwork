@@ -7,6 +7,8 @@ import { CreatePostDto} from './dto/create-post.dto';
 import { PostsService } from './posts.service';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { EventsGateway } from 'src/events/events.gateway';
+import { io } from 'socket.io-client';
 
 
 
@@ -14,7 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('posts')
 @UseGuards(JwtAuthGuard)
 export class PostController {
-    constructor(private postService: PostsService) { }
+    constructor(private postService: PostsService ) { }
 
   
    @Get()
@@ -40,9 +42,13 @@ export class PostController {
      
         post.user=req.user.userId;
         const createdPost = await this.postService.create(post);
-       
+
         if (createdPost) {
             res.status(HttpStatus.CREATED).json({ message: "Successfully Created Post", body: createdPost });
+
+            const  socket = io('http://localhost:3000')
+            const data={payload:`title: ${post.title}  body: ${post.body}`,room: req.user.userId}
+            socket.emit('msgToServer',  data)
         }
         else {
             res.status(HttpStatus.BAD_REQUEST)

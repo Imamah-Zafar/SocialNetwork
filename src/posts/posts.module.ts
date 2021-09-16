@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PostsService } from './posts.service';
 import { PostController } from './posts.controller';
 import { User, UserSchema } from 'src/users/schema/user.schema';
+import { EventsModule } from 'src/events/events.module';
 
 
 @Module({
