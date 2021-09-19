@@ -19,21 +19,28 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('AppGateway');
+    private client: Socket
 
     @SubscribeMessage('msgToServer')
-    handleMessage(
-        @MessageBody() data:{payload: string, room: any}): void {
-
+    async handleMessage(@MessageBody() data: { payload: string, room: any, }) {
         this.server.to(data.room).emit('msgToClient', data.payload);
-        console.log("payload "+data.payload)
-        console.log("room " +data.room)
     }
 
-    @SubscribeMessage('joinRoom')
-    handleJoinRoom(@MessageBody() room: any, @ConnectedSocket() client: Socket) {
+    @SubscribeMessage('socketConnection')
+    handleSocketConnection(@ConnectedSocket() client: Socket) {
+        this.client = client
+    }
 
-        client.join(room)
-        console.log("joined room " + room)
+
+    @SubscribeMessage('joinRoom')
+    handleJoinRoom(@MessageBody() room: any) {
+        this.client.join(room)
+        console.log(this.client.id + "joined room " + room)
+    }
+
+    @SubscribeMessage('leaveRoom')
+    handleLeaveRoom(@MessageBody() room: any) {
+        this.client.leave(room)
     }
 
     afterInit(server: Server) {

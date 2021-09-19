@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { jwtConstants } from './constant';
 import { UsersService } from 'src/users/user.service';
+import { io } from 'socket.io-client';
 
 
 @Injectable()
@@ -20,7 +21,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.usersService.findOne(payload.username);
     if (user) {
 
-      return { userId: payload.sub, username: payload.username ,following:user.following};
+
+      return { userId: payload.sub, username: payload.username, following: user.following };
     }
     else {
       throw new UnauthorizedException();

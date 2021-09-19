@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from '../users/dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { io } from 'socket.io-client';
+import { LoginUserDto } from 'src/users/dto/login-user.dto';
 const saltOrRounds = 10;
 
 @ApiBearerAuth()
@@ -38,7 +39,7 @@ export class UsersController {
 
     @UseGuards(LocalAuthGuard)
     @Post('/login')
-    async login(@Request() req) {
+    async login(@Request() req, @Body(new ValidationPipe()) user: LoginUserDto) {
         return this.authService.login(req.user);
     }
 
@@ -108,9 +109,8 @@ export class UsersController {
 
         const user = await this.usersService.follow(req.user.userId, id);
         if (user) {
-
-        const  socket = io('http://localhost:3000')
-        socket.emit('joinRoom', id)
+            const socket = io('http://localhost:3000')
+            socket.emit('joinRoom', id)
             res.status(HttpStatus.OK).json({ message: "Successfully Followed User", data: user });
         }
         else {
@@ -124,6 +124,8 @@ export class UsersController {
 
         const user = await this.usersService.unfollow(req.user.userId, id);
         if (user) {
+            const socket = io('http://localhost:3000')
+            socket.emit('leaveRoom', id)
             res.status(HttpStatus.OK).json({ message: "Successfully Unfollowed User" });
         }
         else {
@@ -134,15 +136,15 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @Get('/feed')
     async getFeed(@Query() paginationDto: PaginationDto, @Res() res: Response, @Request() req) {
-        paginationDto.page = Number(paginationDto.page)||1
-        paginationDto.limit = Number(paginationDto.limit)|| 2
+        paginationDto.page = Number(paginationDto.page) || 1
+        paginationDto.limit = Number(paginationDto.limit) || 100
         const feed = await this.usersService.getFeed(req.user.following, paginationDto)
-        if (feed ) {
+        if (feed) {
             res.status(HttpStatus.OK).json({ message: "Successfully Retrieved Feed", data: feed });
         }
         else {
-            
-            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not retireve feed"});
+
+            res.status(HttpStatus.NOT_FOUND).json({ message: "Could not retireve feed" });
         }
     }
 

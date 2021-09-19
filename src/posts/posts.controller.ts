@@ -1,33 +1,34 @@
-import { Body, Controller, Get, Post, HttpStatus, Res, Param, Put,Request, Delete, UseGuards, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, HttpStatus, Res, Param, Put, Request, Delete, UseGuards, Query, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
 import { ObjectId } from 'mongoose';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PaginationDto } from '../pagination/pagination.dto';
-import { CreatePostDto} from './dto/create-post.dto';
+import { CreatePostDto } from './dto/create-post.dto';
 import { PostsService } from './posts.service';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { EventsGateway } from 'src/events/events.gateway';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { io } from 'socket.io-client';
 
 
 
+
+@ApiBearerAuth()
 @ApiTags('Post')
 @Controller('posts')
 @UseGuards(JwtAuthGuard)
 export class PostController {
-    constructor(private postService: PostsService ) { }
+    constructor(private postService: PostsService) { }
 
-  
-   @Get()
-    async findAll(@Query() paginationDto: PaginationDto,@Res() res: Response,@Request() req) {
-        const id=req.user.userId;
+
+    @Get()
+    async findAll(@Query() paginationDto: PaginationDto, @Res() res: Response, @Request() req) {
+        const id = req.user.userId;
         paginationDto.page = Number(paginationDto.page)
         paginationDto.limit = Number(paginationDto.limit)
-        const posts = await this.postService.findAll(id,{
+        const posts = await this.postService.findAll(id, {
             ...paginationDto,
             limit: paginationDto.limit > 10 ? 10 : paginationDto.limit
-          });
+        });
         if (posts) {
             res.status(HttpStatus.OK).json({ message: "Successfully Retrieved Posts", body: posts });
         }
@@ -39,16 +40,17 @@ export class PostController {
 
     @Post()
     async create(@Body(new ValidationPipe()) post: CreatePostDto, @Res() res: Response, @Request() req) {
-     
-        post.user=req.user.userId;
+
+        post.user = req.user.userId;
         const createdPost = await this.postService.create(post);
 
         if (createdPost) {
             res.status(HttpStatus.CREATED).json({ message: "Successfully Created Post", body: createdPost });
 
-            const  socket = io('http://localhost:3000')
-            const data={payload:`title: ${post.title}  body: ${post.body}`,room: req.user.userId}
-            socket.emit('msgToServer',  data)
+            const payload = { title: post.title, body: post.body }
+            const data = { payload: payload, room: req.user.userId }
+            const socket = io('http://localhost:3000')
+            socket.emit('msgToServer', data)
         }
         else {
             res.status(HttpStatus.BAD_REQUEST)
@@ -66,7 +68,7 @@ export class PostController {
         }
     }
 
-   @Put(':id')
+    @Put(':id')
     async update(@Param('id') id: ObjectId, @Body() user: UpdatePostDto, @Res() res: Response) {
         const updatedPost = await this.postService.update(id, user)
         if (updatedPost) {
@@ -77,7 +79,7 @@ export class PostController {
         }
     }
 
-  
+
     @Delete(':id')
     async delete(@Param('id') id: ObjectId, @Res() res: Response) {
         const post = await this.postService.delete(id)
