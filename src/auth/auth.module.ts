@@ -8,10 +8,9 @@ import { jwtConstants } from './constant';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  providers: [AuthService, LocalStrategy,JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   imports: [
     UserModule,
-   // forwardRef(() =>UserModule),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
