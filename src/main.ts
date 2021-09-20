@@ -3,7 +3,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { join } from 'path';
 import { AppModule } from './app.module';
-import sslRedirect from 'heroku-ssl-redirect';
+
 
 
 async function bootstrap() {
@@ -12,7 +12,6 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useStaticAssets(join(__dirname, '..', 'static'));
-  app.use(sslRedirect())
   const config = new DocumentBuilder()
     .setTitle('Social Media APP')
     .setVersion('1.0')
