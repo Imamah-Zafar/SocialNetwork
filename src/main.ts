@@ -5,6 +5,7 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  const PORT = process.env.PORT || 3000
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useStaticAssets(join(__dirname, '..', 'static'));
@@ -19,6 +20,6 @@ async function bootstrap() {
 
 
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(PORT);
 }
 bootstrap();
