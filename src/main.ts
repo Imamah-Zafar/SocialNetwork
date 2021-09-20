@@ -7,10 +7,10 @@ import { AppModule } from './app.module';
 
 
 async function bootstrap() {
-  const PORT :string= process.env.PORT 
+  const PORT= process.env.PORT 
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+ 
   app.useStaticAssets(join(__dirname, '..', 'static'));
   const config = new DocumentBuilder()
     .setTitle('Social Media APP')
@@ -23,6 +23,6 @@ async function bootstrap() {
 
 
   app.enableCors();
-  await app.listen(parseInt(PORT));
+  await app.listen(PORT);
 }
 bootstrap();
