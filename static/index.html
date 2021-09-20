@@ -9,8 +9,9 @@
         integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <title>Nestjs SocketIO</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script  type="text/javascript" src="https://cdn.socket.io/socket.io-3.0.0.js"></script>
+    <script type="text/javascript" src="https://cdn.socket.io/socket.io-3.0.0.js"></script>
 </head>
 
 <body>
@@ -21,8 +22,7 @@
                 <br>
                 <div id="status"></div>
                 <div id="chat">
-                    <textarea id="user" class="form-control" v-model="user"
-                        placeholder="Enter username..."></textarea>
+                    <textarea id="user" class="form-control" v-model="user" placeholder="Enter username..."></textarea>
                     <br>
                     <textarea id="password" class="form-control" v-model="password"
                         placeholder="Enter password"></textarea>
