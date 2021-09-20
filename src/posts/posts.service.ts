@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './schema/post.schema';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PaginationDto } from '../pagination/pagination.dto';
-import { PaginatedPostResultDto } from '../pagination/paginatedPostResult.dto';
+import { PaginatedPostResultDto } from '../pagination/paginated.post.result.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
