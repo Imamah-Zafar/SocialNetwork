@@ -44,6 +44,7 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "cors": "^2.8.5",
+    "express-favicon": "^2.0.1",
     "express-session": "^1.17.2",
     "heroku-ssl-redirect": "^0.1.1",
     "joi": "^17.4.2",
