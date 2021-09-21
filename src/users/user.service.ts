@@ -6,7 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PostsService } from 'src/posts/posts.service';
 import { PaginationDto } from '../pagination/pagination.dto';
-import { PaginatedPostResultDto } from 'src/pagination/paginatedPostResult.dto';
+import { PaginatedPostResultDto } from 'src/pagination/paginated.post.result.dto';
 
 
 @Injectable()

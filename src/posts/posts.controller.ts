@@ -49,7 +49,7 @@ export class PostController {
 
             const payload = { title: post.title, body: post.body }
             const data = { payload: payload, room: req.user.userId }
-            const socket = io('http://localhost:3000')
+            const socket = io(process.env.APP_URL)
             socket.emit('msgToServer', data)
         }
         else {

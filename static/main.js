@@ -11,7 +11,7 @@ const app = new Vue({
         async login() {
 
             if (this.validateInput()) {
-                const user = await fetch('http://localhost:3000/users/login', {
+                const user = await fetch(`/users/login`, {
                     method: 'post',
                     headers: {
                         'Accept': 'application/json',
@@ -26,7 +26,7 @@ const app = new Vue({
                 const userInfo = await user.json()
                 const token = userInfo['access_token']
 
-                const profile = await fetch('http://localhost:3000/users/profile', {
+                const profile = await fetch(`/users/profile`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + token
@@ -37,7 +37,7 @@ const app = new Vue({
                 followingUsers.map(id => this.socket.emit('joinRoom', id))
 
 
-                const feed = await fetch('http://localhost:3000/users/feed', {
+                const feed = await fetch(`/users/feed`, {
                     method: 'get',
                     headers: {
                         Authorization: 'Bearer ' + token
@@ -61,7 +61,7 @@ const app = new Vue({
         }
     },
     created() {
-        this.socket = io('http://localhost:3000')
+        this.socket = io('http://localhost:5000')
         this.socket.emit('socketConnection')
         this.socket.on('msgToClient', (message) => {
 

@@ -4,9 +4,13 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+
+async function bootstrap() {
+  const PORT= process.env.PORT || 5000;
+
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+ 
   app.useStaticAssets(join(__dirname, '..', 'static'));
   const config = new DocumentBuilder()
     .setTitle('Social Media APP')
@@ -19,6 +23,6 @@ async function bootstrap() {
 
 
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(PORT);
 }
 bootstrap();
