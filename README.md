@@ -58,6 +58,9 @@ See the collection for the documentation
 ## Architecture Diagram
 [![Screenshot-from-2021-09-19-13-33-11.png](https://i.postimg.cc/VLz6W9wm/Screenshot-from-2021-09-19-13-33-11.png)](https://postimg.cc/qgZ4k3g5)
 
+## Flow Diagram
+[![Untitled-Workspace-1.png](https://i.postimg.cc/1tm3GBrq/Untitled-Workspace-1.png)](https://postimg.cc/B8z3sxyS)
+
 
 ## Database Design
 [![Untitled-Workspace.png](https://i.postimg.cc/d1ZWXKjc/Untitled-Workspace.png)](https://postimg.cc/k69F6zHT)
