@@ -61,7 +61,7 @@ const app = new Vue({
         }
     },
     created() {
-        this.socket = io()
+        this.socket = io('http://localhost:5000')
         this.socket.emit('socketConnection')
         this.socket.on('msgToClient', (message) => {
 

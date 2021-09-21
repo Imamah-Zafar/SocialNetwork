@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Get, Post, Request, HttpStatus, Res, Param, Put, Delete, UseGuards, Inject, forwardRef, UsePipes, ValidationPipe, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Query, Get, Post, Request, HttpStatus, Res, Param, Put, Delete, UseGuards, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
 import { ObjectId } from 'mongoose';
 import { AuthService } from '../auth/auth.service';
@@ -109,7 +109,7 @@ export class UsersController {
 
         const user = await this.usersService.follow(req.user.userId, id);
         if (user) {
-            const socket = io('http://localhost:3000')
+            const socket = io(process.env.APP_URL)
             socket.emit('joinRoom', id)
             res.status(HttpStatus.OK).json({ message: "Successfully Followed User", data: user });
         }
@@ -124,7 +124,7 @@ export class UsersController {
 
         const user = await this.usersService.unfollow(req.user.userId, id);
         if (user) {
-            const socket = io('http://localhost:3000')
+            const socket = io(process.env.APP_URL)
             socket.emit('leaveRoom', id)
             res.status(HttpStatus.OK).json({ message: "Successfully Unfollowed User" });
         }
