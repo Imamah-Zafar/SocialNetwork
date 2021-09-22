@@ -52,7 +52,7 @@ npm run start
 ```
 ## Documentation 
 See the collection for the documentation
-[Swagger UI ](http://localhost:3000/api/#/)
+[Swagger UI ](http://localhost:5000/api/#/)
 
 
 ## Architecture Diagram
